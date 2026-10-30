@@ -1,3 +1,5 @@
+package studyassistant.controller;
+
 /**
  *  Controller contains the user-input GUI components, such as the question-entry area and the Ask Models button, together with their event listeners.
  *  The Controller manages user input and coordinates each user-initiated LLM request. 

@@ -1,7 +1,14 @@
+package studyassistant.model;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import studyassistant.model.LLMResponse;
+import studyassistant.model.ModelObserver;
+import studyassistant.model.ResponseStatus;
 
 /**
  * model for representing the current user interaction
@@ -33,7 +40,7 @@ public class QuerySession {
 	}
 
 	public Map<String, LLMResponse> getResponses() {
-		return responses;
+		return Collections.unmodifiableMap(responses);
 	}
 
 	public LLMResponse getResponse(String modelName) {
@@ -44,11 +51,7 @@ public class QuerySession {
 	}
 
 	public void setResponse(String modelName, LLMResponse response) {
-		if (modelName == null) {
-			return;
-		}
-		responses.put(modelName, response);
-		notifyObservers();
+		updateResponse(modelName, response);
 	}
 
 	public void updateResponse(String modelName, LLMResponse response) {

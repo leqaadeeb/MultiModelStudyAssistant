@@ -1,7 +1,10 @@
+package studyassistant.model;
+
+import studyassistant.model.ResponseStatus;
 
 /**
  * Represents a single LLM's response state in the MVC model.
- * 
+ *
  * Interactions:
  * QuerySession owns a map of model names to LLMResponse. Only QuerySession mutators
  * (setResponse, updateResponse, initializeResponses, clearResponses) may change observable

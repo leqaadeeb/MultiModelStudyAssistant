@@ -1,3 +1,6 @@
+package studyassistant.view;
+
+import studyassistant.model.ModelObserver;
 
 /**
  * a single reusable response-view class and instantiate one View object per LLM, parameterized by the LLM name.
