@@ -3,10 +3,19 @@ package studyassistant.strategy;
 import java.util.concurrent.CompletableFuture;
 import studyassistant.model.LLMResponse;
 
-public interface LLMStrategy {   
 
-    String getDisplayName();    
+/**
+ * Contract for requesting an answer from an AI model.
+ */
+public interface LLMStrategy {
 
-    CompletableFuture<LLMResponse> generate(String question);
+	/**
+	 * Returns the model identifier used to match QuerySession responses.
+	 */
+	String getDisplayName();
 
+	/**
+	 * Starts a request for the question
+	 */
+	CompletableFuture<LLMResponse> generate(String question);
 }
