@@ -30,6 +30,41 @@ public class QuerySession {
 		this.observers = new ArrayList<ModelObserver>();
 	}
 
+
+	/**
+	 * Start a new query.
+	 * Uses fresh WAITING responses.
+	 * After running, notifies observers.
+	 *
+	 * @param question The question the user has.
+	 * @param modelNames The names of models the user wants to use.
+	 */
+	public void startNewQuery(String question, List<String> modelNames){
+		// First, validate the parameters
+		if(question == null || question.trim().isEmpty()){
+			throw new IllegalArgumentException("Question cannot be blank");
+		}
+		if(modelNames == null || modelNames.isEmpty()){
+			throw new IllegalArgumentException("At least one model is required");
+		}
+
+		for (String modelName : modelNames){
+			if(modelName == null || modelName.trim().isEmpty()){
+				throw new IllegalArgumentException("Model names cannot be blank");
+			}
+		}
+
+
+		this.question = question.trim();
+		responses.clear();
+
+		for (String modelName : modelNames) {
+			responses.put(modelName, new LLMResponse(modelName));
+		}
+
+		notifyObservers();
+	}
+
 	public String getQuestion() {
 		return question;
 	}
