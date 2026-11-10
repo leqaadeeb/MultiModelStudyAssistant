@@ -38,3 +38,28 @@ Requests are asynchronous so the application can process each model's response i
 - Ollama
 - JUnit
 - Git and GitHub
+
+## Testing
+
+The project uses JUnit 5 for automated tests. Maven is used as the build and test runner: it downloads the JUnit dependency, compiles both `src` and `test`, and runs the suite with one command. The tests do not call Ollama.
+
+### Check Maven
+
+Make sure Java 17 or newer and Maven 3.8 or newer are installed:
+
+```bash
+java -version
+mvn -version
+```
+
+Both commands should print a version. If `mvn` is missing, install Maven or run the tests from IntelliJ IDEA, which includes Maven.
+
+### Run the tests
+
+From the project root:
+
+```bash
+mvn test
+```
+
+The first run needs internet access so Maven can download JUnit. A successful run ends with `BUILD SUCCESS` and reports 7 tests with 0 failures.
