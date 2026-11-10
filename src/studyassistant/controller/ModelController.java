@@ -10,11 +10,6 @@ import java.util.List;
 import studyassistant.strategy.LLMStrategy;
 import java.util.ArrayList;
 import javax.swing.JPanel;
-import java.util.concurrent.CompletableFuture;
-import javax.swing.SwingUtilities;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.TimeoutException;
 /**
  *  Controller contains the user-input GUI components, such as the question-entry area and the Ask Models button, together with their event listeners.
  *  The Controller manages user input and coordinates each user-initiated LLM request. 
@@ -35,6 +30,7 @@ public class ModelController {
     private List<LLMStrategy> strategies; 
     private JPanel panel = new JPanel(new BorderLayout());
     private int queryNumber = 0;
+    private final ResponseProcessor responseProcessor = new ResponseProcessor();
     
 
 
@@ -73,52 +69,13 @@ public class ModelController {
     private void requestAnswer(LLMStrategy strategy, String question, int requestQueryNumber){
         String modelName = strategy.getDisplayName();
         LLMResponse runningResponse = new LLMResponse(modelName, null, ResponseStatus.RUNNING, 0L, null);
-        session.updateResponse(modelName, runningResponse);  
-        long startTime = System.nanoTime();
-        CompletableFuture<LLMResponse> future = strategy.generate(question);
-        future.orTimeout(60, TimeUnit.SECONDS);
-        future.thenAccept(response -> {
-            SwingUtilities.invokeLater(()->{
-                if (requestQueryNumber != queryNumber){
-                    return;
-                }
-                if (response == null || response.getText() == null || response.getText().trim().isEmpty()){
-                    long elapsedTimeMs = TimeUnit.NANOSECONDS.toMillis(
-                    System.nanoTime() - startTime);
-                    LLMResponse invalidResponse = new LLMResponse(modelName, null, ResponseStatus.INVALID_RESPONSE, elapsedTimeMs, "The model returns an empty or invalid response.");
-                    session.updateResponse(modelName, invalidResponse);
-                }
-                else {
-                    session.updateResponse(modelName, response);
-                }
-            });
+        session.updateResponse(modelName, runningResponse);
+        responseProcessor.process(strategy, question, response -> {
+            if (requestQueryNumber != queryNumber){
+                return;
+            }
+            session.updateResponse(modelName, response);
         });
-        future.exceptionally(error -> {
-            Throwable cause = error;
-            while (cause instanceof CompletionException && cause.getCause() != null){
-                cause = cause.getCause();
-            }
-
-            ResponseStatus status;
-            if (cause instanceof TimeoutException){
-                status = ResponseStatus.TIMEOUT;
-            }
-            else {
-                status = ResponseStatus.FAILED;
-            }
-            long elapsedTimeMs = TimeUnit.NANOSECONDS.toMillis(
-                System.nanoTime() - startTime);
-
-            LLMResponse failureResponse = new LLMResponse(modelName, null, status, elapsedTimeMs, cause.toString());
-            SwingUtilities.invokeLater(()->{
-                if (requestQueryNumber != queryNumber){
-                    return;
-                }
-                session.updateResponse(modelName, failureResponse);
-            });
-            return null;
-        });
-
     }
     
 
