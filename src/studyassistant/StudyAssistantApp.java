@@ -12,7 +12,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudyAssistanApp {
+public class StudyAssistantApp {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			QuerySession session = new QuerySession();
