@@ -2,7 +2,10 @@ package studyassistant.controller;
 import studyassistant.model.LLMResponse;
 import studyassistant.model.ResponseStatus;
 import java.awt.BorderLayout;
+import java.awt.Insets;
 import studyassistant.model.QuerySession;
+import javax.swing.BorderFactory;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -38,10 +41,22 @@ public class ModelController {
         this.session = session;
         this.strategies = strategies;
         questionInput = new JTextArea(3, 40);
+        questionInput.setLineWrap(true);
+        questionInput.setWrapStyleWord(true);
+        questionInput.setMargin(new Insets(6, 8, 6, 8));
+
+        JScrollPane inputScroll = new JScrollPane(questionInput);
+
+        JPanel buttonPanel = new JPanel(new BorderLayout());
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(6, 0, 0, 0));
+
         askModelsButton = new JButton("Ask Models");
         askModelsButton.addActionListener(event -> submitQuestion());
-        panel.add(questionInput, BorderLayout.CENTER);
-        panel.add(askModelsButton, BorderLayout.SOUTH);
+        buttonPanel.add(askModelsButton, BorderLayout.CENTER);
+
+        panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        panel.add(inputScroll, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
     private void submitQuestion(){

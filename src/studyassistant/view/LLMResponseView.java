@@ -2,6 +2,7 @@ package studyassistant.view;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 
 import javax.swing.*;
 import studyassistant.model.LLMResponse;
@@ -41,12 +42,17 @@ public class LLMResponseView extends JPanel implements ModelObserver {
 		
 		responseArea = new JTextArea(8,25);
 		responseArea.setEditable(false);
+		responseArea.setLineWrap(true);
+		responseArea.setWrapStyleWord(true);
+		responseArea.setMargin(new Insets(4, 6, 4, 6));
 		
 		JPanel panel = new JPanel(new GridLayout(2,1));
 		panel.add(modelLabel);
 		panel.add(statusAndTime);
 		
 		JScrollPane scroll = new JScrollPane(responseArea);
+		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		add(panel, BorderLayout.NORTH);
 		add(scroll, BorderLayout.CENTER);
 	}
@@ -70,5 +76,6 @@ public class LLMResponseView extends JPanel implements ModelObserver {
 		}
 		
 		responseArea.setText(response.getText());
+		responseArea.setCaretPosition(0);
 	}
 }
