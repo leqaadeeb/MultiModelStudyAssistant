@@ -11,14 +11,15 @@ import java.util.concurrent.TimeUnit;
  *    using {@code `ollama serve`} or {@code `brew services start ollama`} in CLI.
  * 2. Pull the required model with {@code `ollama pull llama3.2:1b`}, or update the
  *    model name in this test to match an installed model.
- * 3. Compile the client classes from the src directory:
+ * 3. Compile and copy runtime dependencies from the project root:
  *
- *        cd src
- *        javac -d /tmp/out studyassistant/client/*.java
+ *        mvn compile dependency:copy-dependencies -DincludeScope=runtime
  *
  * 4. Run the test:
  *
- *        java -cp /tmp/out studyassistant.client.TestAPI
+ *        java -cp "target/classes;target/dependency/*" studyassistant.client.TestAPI
+ *
+ *    On macOS/Linux, use ':' instead of ';' in the classpath.
  *
  */
 public class TestAPI {
